@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Virtual Exam Hug</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      background: linear-gradient(#fce4ec, #e3f2fd);
+      overflow: hidden;
+    }
+    .page {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      text-align: center;
+      padding: 20px;
+      position: relative;
+    }
+    .hug-img {
+      width: 400px;
+      margin: 20px;
+      animation: float 3s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    button {
+      background-color: #ff80ab;
+      color: white;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 25px;
+      font-size: 1.2em;
+      box-shadow: 0px 4px 8px rgba(0,0,0,0.2);
+      cursor: pointer;
+      margin-top: 20px;
+      transition: 0.3s ease;
+    }
+    button:hover {
+      background-color: #f06292;
+    }
+    .kiss-animation {
+      font-size: 3rem;
+      animation: popKiss 2s infinite;
+    }
+    @keyframes popKiss {
+      0% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.2); opacity: 0.7; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .floating-hearts::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: url('floating-hearts.gif') repeat;
+      pointer-events: none;
+      animation: floatHearts 20s linear infinite;
+    }
+    @keyframes floatHearts {
+      from { background-position: 0 0; }
+      to { background-position: 0 -1000px; }
+    }
+    .flip-card {
+      background-color: transparent;
+      width: 250px;
+      height: 150px;
+      perspective: 1000px;
+      margin-top: 20px;
+    }
+    .flip-card-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      text-align: center;
+      transition: transform 0.6s;
+      transform-style: preserve-3d;
+    }
+    .flip-card:hover .flip-card-inner {
+      transform: rotateY(180deg);
+    }
+    .flip-card-front, .flip-card-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+      border-radius: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 10px;
+    }
+    .flip-card-front {
+      background-color: #f8bbd0;
+      color: black;
+    }
+    .flip-card-back {
+      background-color: #b3e5fc;
+      color: black;
+      transform: rotateY(180deg);
+    }
+    .blossoms {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .blossoms::before {
+      content: "";
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background-image: url('assets/floating-stars.gif');
+      background-repeat: repeat;
+      animation: blossomFall 25s linear infinite;
+      opacity: 0.15;
+    }
+    @keyframes blossomFall {
+      from { background-position: 0 0; }
+      to { background-position: 0 1000px; }
+    }
+    .pet {
+      position: fixed;
+      bottom: 10px;
+      right: 10px;
+      z-index: 2;
+      font-size: 1.2em;
+      background: #fff3cd;
+      padding: 14px 16px;
+      border-radius: 10px;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.25);
+      max-width: 300px;
+      font-weight: bold;
+      color: #856404;
+      cursor: pointer;
+      animation: popUp 3s ease-in-out infinite;
+    }
+    .final-love-note {
+      margin-top: 40px;
+      font-size: 1.4em;
+      color: #d81b60;
+      font-weight: bold;
+      animation: fadeIn 2s ease-in;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="blossoms"></div>
+  <audio id="bg-music" autoplay loop muted></audio>
+  <script>
+    const music = document.getElementById('bg-music');
+    music.src = 'assets/soft-music.mp3';
+    music.play().then(() => {
+      music.muted = false;
+    }).catch(() => {
+      document.body.addEventListener('click', () => {
+        music.muted = false;
+        music.play();
+      }, { once: true });
+    });
+
+    // Auto pop-up message logic
+    const tips = [
+      "🐰 Tip: Take 5 deep breaths and stretch a little. You’re doing great!",
+      "🐰 Tip: Close your eyes and imagine a cozy hug.",
+      "🐰 Tip: You are not alone. I'm right here cheering for you!",
+      "🐰 Tip: Smile at yourself in the mirror—you’re precious. 💕",
+      "🐰 Tip: Drink a little water, hydrate your brilliance! 💧"
+    ];
+    let tipIndex = 0;
+    function showNextTip() {
+      tipIndex = (tipIndex + 1) % tips.length;
+      document.getElementById('petTip').innerText = tips[tipIndex];
+    }
+    // Show tip automatically every 10 seconds
+    setInterval(showNextTip, 10000);
+  </script>
+
+  <!-- Page 1: Warm Welcome & Virtual Hug -->
+  <div class="page" id="page1">
+    <h1>Hey sweetheart, take a deep breath 💗</h1>
+    <img src="assets/milk-and-mocha.webp" alt="Virtual Hug" class="hug-img">
+    <button onclick="showPage(2)">Next Hug 💞</button>
+  </div>
+
+  <!-- Page 2: Cute Encouragement Note -->
+  <div class="page" id="page2">
+    <h2>“You are doing amazing, even if it doesn’t feel like it right now 💫”</h2>
+    <div class="floating-hearts"></div>
+    <img src="assets/bear-hug.gif" alt="Click for another hug" class="hug-img">
+    <button onclick="showPage(3)">More Love ➡️</button>
+  </div>
+
+  <!-- Page 3: Virtual Kiss & Final Message -->
+  <div class="page" id="page3">
+    <div class="kiss-animation">💋💋💋</div>
+    <h2>You’re doing better than you think. I’m proud of you. ❤️</h2>
+    <div class="flip-card">
+      <div class="flip-card-inner">
+        <div class="flip-card-front">
+          Click me for a note 💌
+        </div>
+        <div class="flip-card-back">
+          You shine the brightest when you believe in yourself Babe🌟
+        </div>
+      </div>
+    </div>
+    <div class="final-love-note">
+      🌟 I love you so much, and I'm so proud of how strong you're being. <br>
+      No matter what, you're enough. You're doing your best, and that’s beautiful. 💕<br>
+      Now take a breath and feel my hug wrap around you. You've got this! 🌈
+    </div>
+    <button onclick="showPage(1)">Back to Start</button>
+  </div>
+
+  <!-- Encouraging Pet Character -->
+  <div class="pet" onclick="showNextTip()" id="petTip">
+    🐰 Tip: Take 5 deep breaths and stretch a little. You’re doing great!
+  </div>
+
+  <script>
+    const pages = document.querySelectorAll('.page');
+    function showPage(n) {
+      pages.forEach(p => p.style.display = 'none');
+      document.getElementById(`page${n}`).style.display = 'flex';
+    }
+    showPage(1);
+  </script>
+</body>
+</html>
